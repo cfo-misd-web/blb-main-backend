@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const filenameParam = z.object({
     filename: z
@@ -106,4 +106,46 @@ export const makeCommentResponse = z.object({
         createdAt: z.number(),
         updatedAt: z.number(),
     })
+});
+
+export const getPostsPaginatedQuerySchema = z.object({
+    page: z.string().optional().default('1').openapi({
+        param: { name: 'page', in: 'query', description: 'Page number (1-based)' },
+        example: '1',
+    }),
+    pageSize: z.string().optional().default('10').openapi({
+        param: { name: 'pageSize', in: 'query', description: 'Number of posts per page (max 100)' },
+        example: '10',
+    }),
+});
+
+export const getPostsPaginatedResponse = z.object({
+    posts: z.array(z.object({
+        id: z.string(),
+        title: z.string(),
+        author: z.string().nullable(),
+        bannerImg: z.string().nullable(),
+        content: z.string(),
+        likes: z.number(),
+        createdAt: z.number(),
+        updatedAt: z.number(),
+    })),
+    pagination: z.object({
+        page: z.number(),
+        pageSize: z.number(),
+        total: z.number(),
+        totalPages: z.number(),
+    }),
+});
+
+export const makeLikeParams = z.object({
+    id: z.string().min(1).openapi({
+        param: { name: 'id', in: 'path', description: 'Post ID to like' },
+        example: 'post-uuid',
+    }),
+});
+
+export const makeLikeResponse = z.object({
+    message: z.string(),
+    likes: z.number(),
 });

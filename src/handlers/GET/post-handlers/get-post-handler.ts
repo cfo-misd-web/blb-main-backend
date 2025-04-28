@@ -1,9 +1,9 @@
-import { db } from '@/db/connection.js';
-import { posts } from '@/db/schema.js';
+import { db } from '../../../db/connection.js';
+import { posts } from '../../../db/schema.js';
 import { eq } from 'drizzle-orm';
 import type { Context, Handler } from 'hono';
 import { z } from 'zod';
-import { ValidationError } from '@/utils/make-error.js';
+import { ValidationError } from '../../../utils/make-error.js';
 
 export const getPostParamsSchema = z.object({
     id: z.string().min(1),

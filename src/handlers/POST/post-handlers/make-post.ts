@@ -1,10 +1,9 @@
-import { db } from '@/db/connection.js';
-import { posts } from '@/db/schema.js';
+import { db } from '../../../db/connection.js';
+import { posts } from '../../../db/schema.js';
 import { v4 as uuidv4 } from 'uuid';
-import { z } from 'zod';
 import type { Context, Handler } from 'hono';
-import { ValidationError } from '@/utils/make-error.js';
-import { makePostSchema } from '@/zod-schema/schema.js';
+import { ValidationError } from '../../../utils/make-error.js';
+import { makePostSchema } from '../../../zod-schema/schema.js';
 
 
 

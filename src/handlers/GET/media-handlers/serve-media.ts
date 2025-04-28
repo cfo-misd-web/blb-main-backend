@@ -2,9 +2,9 @@ import fs from 'fs/promises';
 import path from 'path';
 import type { Context } from 'hono';
 import { z } from 'zod';
-import { NotFoundError } from '@/utils/make-error.js';
-import { db } from '@/db/connection.js';
-import { media } from '@/db/schema.js';
+import { NotFoundError } from '../../../utils/make-error.js';
+import { db } from '../../../db/connection.js';
+import { media } from '../../../db/schema.js';
 import { eq } from 'drizzle-orm';
 
 export const serveMediaHandler = async (c: Context) => {

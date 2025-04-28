@@ -1,5 +1,5 @@
-import { db } from '@/db/connection.js';
-import { comments } from '@/db/schema.js';
+import { db } from '../../../db/connection.js';
+import { comments } from '../../../db/schema.js';
 import { eq } from 'drizzle-orm';
 import type { Context, Handler } from 'hono';
 import { z } from 'zod';

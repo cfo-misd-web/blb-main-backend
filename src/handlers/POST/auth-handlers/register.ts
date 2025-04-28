@@ -1,12 +1,12 @@
-import { db } from '@/db/connection.js';
-import { users } from '@/db/schema.js';
+import { db } from '../../../db/connection.js';
+import { users } from '../../../db/schema.js';
 import { eq } from 'drizzle-orm';
 import jwt from 'jsonwebtoken';
 import type { Context, Handler } from 'hono';
 import { v4 as uuidv4 } from 'uuid';
-import { registerSchema } from '@/zod-schema/schema.js';
-import { hashPassword } from '@/utils/hash-password.js';
-import { ValidationError } from '@/utils/make-error.js';
+import { registerSchema } from '../../../zod-schema/schema.js';
+import { hashPassword } from '../../../utils/hash-password.js';
+import { ValidationError } from '../../../utils/make-error.js';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 const JWT_EXPIRES_IN = '7d';

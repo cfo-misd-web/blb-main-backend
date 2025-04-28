@@ -1,6 +1,6 @@
 import { createRoute } from '@hono/zod-openapi';
 import { z } from 'zod';
-import { fileUploadSchema, getCommentsByPostIdParams, getPostParamsSchema, getPostResponse, loginRequest, loginResponse, makeCommentResponse, makePostResponse, makePostSchema, registerSchema } from './schema.js';
+import { fileUploadSchema, getCommentsByPostIdParams, getPostParamsSchema, getPostResponse, getPostsPaginatedQuerySchema, getPostsPaginatedResponse, loginRequest, loginResponse, makeCommentResponse, makeCommentSchema, makePostResponse, makePostSchema, registerSchema, makeLikeParams, makeLikeResponse } from './schema.js';
 
 export const loginroute = createRoute({
     summary: 'Log in a user',
@@ -85,7 +85,7 @@ export const makePostRoute = createRoute({
 
 export const uploadmediaRoute = createRoute({
     method: 'post',
-    path: '/upload',
+    path: '/protected/upload',
     summary: 'Upload an image',
     description: 'Uploads an image file (max 5MB) and stores it on the server. Only image files are allowed.',
     tags: ['media'],
@@ -136,7 +136,26 @@ export const getPostRoute = createRoute({
     }
 });
 
-
+export const getPostsPaginatedRoute = createRoute({
+    method: 'get',
+    path: '/posts',
+    summary: 'Get paginated posts',
+    description: 'Returns a paginated list of posts.',
+    tags: ['posts'],
+    request: {
+        query: getPostsPaginatedQuerySchema,
+    },
+    responses: {
+        200: {
+            description: 'Paginated posts',
+            content: {
+                'application/json': {
+                    schema: getPostsPaginatedResponse
+                }
+            }
+        }
+    }
+});
 
 export const getCommentsByPostIdRoute = createRoute({
     method: 'get',
@@ -155,6 +174,54 @@ export const getCommentsByPostIdRoute = createRoute({
                     schema: z.object({
                         comments: makeCommentResponse
                     })
+                }
+            }
+        }
+    }
+});
+
+export const makeCommentRoute = createRoute({
+    method: 'post',
+    path: '/comments',
+    summary: 'Create a new comment',
+    description: 'Creates a new comment for a given post ID.',
+    tags: ['comments'],
+    request: {
+        body: {
+            content: {
+                'application/json': {
+                    schema: makeCommentSchema
+                }
+            }
+        }
+    },
+    responses: {
+        201: {
+            description: 'Comment created',
+            content: {
+                'application/json': {
+                    schema: makeCommentResponse
+                }
+            }
+        }
+    }
+});
+
+export const makeLikeRoute = createRoute({
+    method: 'post',
+    path: '/posts/{id}/like',
+    summary: 'Like a post',
+    description: 'Increment the like count for a post by its ID.',
+    tags: ['posts'],
+    request: {
+        params: makeLikeParams,
+    },
+    responses: {
+        200: {
+            description: 'Like added',
+            content: {
+                'application/json': {
+                    schema: makeLikeResponse
                 }
             }
         }

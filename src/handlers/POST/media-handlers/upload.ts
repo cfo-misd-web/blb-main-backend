@@ -1,14 +1,12 @@
 import type { Context, Handler } from 'hono';
-import { ForbiddenError, ValidationError } from '@/utils/make-error.js';
+import { ForbiddenError, ValidationError } from '../../../utils/make-error.js';
 import fs from 'fs/promises';
 import path from 'path';
-import { db } from '@/db/connection.js';
-import { media } from '@/db/schema.js';
+import { db } from '../../../db/connection.js';
+import { media } from '../../../db/schema.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export const uploadHandler: Handler = async (c: Context) => {
-    const baseUrl = c.req.url.replace(/\/$/, '');
-    const b_url = new URL(baseUrl);
     const body = await c.req.parseBody();
     const file = body.file as File;
     if (!file) {

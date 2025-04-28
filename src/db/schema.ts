@@ -37,7 +37,7 @@ export const comments = sqliteTable('comments', {
 
 export const media = sqliteTable('media', {
     id: text('id').primaryKey(),
-    path: text('path').notNull(),
+    path: text('path').notNull().unique(),
     url: text('url').notNull(),
     createdAt: integer('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
     updatedAt: integer('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
