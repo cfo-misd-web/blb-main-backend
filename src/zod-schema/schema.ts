@@ -117,6 +117,10 @@ export const getPostsPaginatedQuerySchema = z.object({
         param: { name: 'pageSize', in: 'query', description: 'Number of posts per page (max 100)' },
         example: '10',
     }),
+    search: z.string().optional().openapi({
+        param: { name: 'search', in: 'query', description: 'Search string for filtering posts by title or content' },
+        example: 'news',
+    }),
 });
 
 export const getPostsPaginatedResponse = z.object({
@@ -149,3 +153,5 @@ export const makeLikeResponse = z.object({
     message: z.string(),
     likes: z.number(),
 });
+
+
