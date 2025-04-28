@@ -7,9 +7,16 @@ import { serveMediaHandler } from './handlers/GET/media-handlers/serve-media.js'
 import { authMiddleware } from './middleware/auth-middleware.js'
 import { errorHandlerMiddleware } from './middleware/error-middleware.js'
 import { Scalar } from '@scalar/hono-api-reference'
+import { logger } from 'hono/logger'
+import { getCommentsByPostIdRoute, getPostRoute, loginroute, makePostRoute, registerRoute, uploadmediaRoute } from './zod-schema/openapi-route.js'
+import { makePostHandler } from './handlers/POST/post-handlers/make-post.js'
+import { getPostHandler } from './handlers/GET/post-handlers/get-post-handler.js'
+import { getCommentsByPostIdHandler } from './handlers/GET/comments-handler/get-comments-by-id.js'
 
 
 const app = new OpenAPIHono()
+
+app.use(logger())
 
 app.doc('/openapi.json', {
   openapi: '3.0.0',
@@ -17,6 +24,7 @@ app.doc('/openapi.json', {
     title: "balinkbayan API",
     version: '0.0.1canary',
   },
+
 })
 
 app.get('/reference', Scalar({ url: '/openapi.json' }))
@@ -31,17 +39,21 @@ app.onError(errorHandlerMiddleware)
 
 // public routes
 
-app.post('/auth/register', registerHandler)
+app.openapi(registerRoute, registerHandler)
+app.openapi(loginroute, loginHandler)
+app.openapi(uploadmediaRoute, uploadHandler)
+app.openapi(getCommentsByPostIdRoute, getCommentsByPostIdHandler)
 
-app.post('/auth/login', loginHandler)
-
-app.post('/media/upload', uploadHandler)
-
-app.get('/media/serve/:filename', serveMediaHandler)
+app.get('/media/:filename', serveMediaHandler)
 
 // protected routes
 
 app.use('/protected/*', authMiddleware)
+
+app.openapi(makePostRoute, makePostHandler)
+app.openapi(getPostRoute, getPostHandler)
+
+
 
 app.get('/protected/data', (c) => {
   return c.json({ message: 'This is protected data' })
