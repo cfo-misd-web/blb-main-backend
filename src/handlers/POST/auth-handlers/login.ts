@@ -1,39 +1,30 @@
-import { db } from '../../../db/connection.js';
-import { users } from '../../../db/schema.js';
+import { db } from '@/db/connection.js';
+import { users } from '@/db/schema.js';
 import { eq } from 'drizzle-orm';
-import { Buffer } from 'node:buffer';
-import { subtle } from 'node:crypto';
 import jwt from 'jsonwebtoken';
 import type { Context } from 'hono';
-import { loginSchema } from '../../../zod-schema/schema.js';
+import { loginRequest } from '@/zod-schema/schema.js';
+import { makeError, NotFoundError, ValidationError } from '@/utils/make-error.js';
+import { verifyPassword } from '@/utils/verify-password.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
+const JWT_SECRET = process.env.JWT_SECRET!;
 const JWT_EXPIRES_IN = '7d';
-
-async function verifyPassword(storedHash: string, providedPassword: string): Promise<boolean> {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(providedPassword);
-    const hashBuffer = await subtle.digest('SHA-256', data);
-    const providedHash = Buffer.from(hashBuffer).toString('hex');
-    return storedHash === providedHash;
-}
-
 
 export const loginHandler = async (c: Context) => {
     const body = await c.req.json();
-    const parseResult = loginSchema.safeParse(body);
+    const parseResult = loginRequest.safeParse(body);
     if (!parseResult.success) {
-        return c.json({ error: 'Invalid input', details: parseResult.error.errors }, 400);
+        throw new ValidationError(`Invalid input: ${JSON.stringify(parseResult.error.errors)}`);
     }
-    const { email, password } = parseResult.data;
+    const { email, password } = parseResult.data!;
     const found = await db.select().from(users).where(eq(users.email, email)).limit(1);
     if (found.length === 0) {
-        return c.json({ error: 'Invalid credentials' }, 401);
+        throw new NotFoundError(`user with ${email} not found`);
     }
     const user = found[0];
     const isValid = await verifyPassword(user.passwordHash, password);
     if (!isValid) {
-        return c.json({ error: 'Invalid credentials' }, 401);
+        throw new Error('invalid password');
     }
     const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
     const { passwordHash, ...userData } = user;

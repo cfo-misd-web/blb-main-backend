@@ -1,8 +1,9 @@
 import { sql } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
+
 export const users = sqliteTable('users', {
-    id: integer('id').primaryKey({ autoIncrement: true }),
+    id: text('id').primaryKey(),
     email: text('email').notNull().unique(),
     name: text('name').notNull(),
     passwordHash: text('password_hash').notNull(),
@@ -11,19 +12,33 @@ export const users = sqliteTable('users', {
 });
 
 export const posts = sqliteTable('posts', {
-    id: integer('id').primaryKey({ autoIncrement: true }),
+    id: text('id').primaryKey(),
     title: text('title').notNull(),
     content: text('content').notNull(),
+    likes: integer('likes').notNull().default(0),
     userId: integer('user_id').references(() => users.id).notNull(),
     createdAt: integer('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
     updatedAt: integer('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 
 export const comments = sqliteTable('comments', {
-    id: integer('id').primaryKey({ autoIncrement: true }),
+    id: text('id').primaryKey(),
     content: text('content').notNull(),
-    userId: integer('user_id').references(() => users.id).notNull(),
+    fname: text('fname'),
+    lname: text('lname'),
+    email: text('email').notNull(),
+    cId: text('c_id').notNull(),
     postId: integer('post_id').references(() => posts.id).notNull(),
+    createdAt: integer('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: integer('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+});
+
+
+export const media = sqliteTable('media', {
+    id: text('id').primaryKey(),
+    postId: text('post_id').references(() => posts.id).notNull(),
+    path: text('path').notNull(),
+    url: text('url').notNull(),
     createdAt: integer('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
     updatedAt: integer('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
 });
