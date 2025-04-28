@@ -16,6 +16,6 @@ COPY --from=build /app/server ./server
 COPY --from=build /app/drizzle ./drizzle
 COPY --from=build /app/server/db/blbmain.db ./server/db/blbmain.db
 COPY --from=build /app/server/uploads ./server/uploads
-COPY --from=build /app/.env ./.env
+# COPY --from=build /app/.env ./.env
 ENV NODE_ENV=production
 CMD ["node", "dist/src/index.js"]
