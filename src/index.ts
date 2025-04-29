@@ -9,7 +9,7 @@ import { authMiddleware } from './middleware/auth-middleware.js'
 import { errorHandlerMiddleware } from './middleware/error-middleware.js'
 import { Scalar } from '@scalar/hono-api-reference'
 import { logger } from 'hono/logger'
-import { getCommentsByPostIdRoute, getPostRoute, loginroute, makeCommentRoute, makePostRoute, registerRoute, uploadmediaRoute, getPostsPaginatedRoute, makeLikeRoute } from './zod-schema/openapi-route.js'
+import { getCommentsByPostIdRoute, getPostRoute, loginroute, makeCommentRoute, makePostRoute, registerRoute, uploadmediaRoute, getPostsPaginatedRoute, makeLikeRoute, logoutRoute } from './zod-schema/openapi-route.js'
 import { makePostHandler } from './handlers/POST/post-handlers/make-post.js'
 import { getPostHandler } from './handlers/GET/post-handlers/get-post-handler.js'
 import { getCommentsByPostIdHandler } from './handlers/GET/comments-handler/get-comments-by-id.js'
@@ -19,6 +19,7 @@ import { healthHandler } from './handlers/GET/health.js'
 import { cors } from 'hono/cors'
 import { getPostsPaginatedHandler } from './handlers/GET/post-handlers/get-posts-paginated.js'
 import { makeLikeHandler } from './handlers/POST/post-handlers/make-like.js';
+import { logoutHandler } from './handlers/POST/auth-handlers/logout.js'
 
 const app = new OpenAPIHono()
 
@@ -53,6 +54,7 @@ app.onError(errorHandlerMiddleware)
 
 app.openapi(registerRoute, registerHandler)
 app.openapi(loginroute, loginHandler)
+app.openapi(logoutRoute, logoutHandler)
 app.openapi(getCommentsByPostIdRoute, getCommentsByPostIdHandler)
 app.openapi(getPostRoute, getPostHandler)
 app.openapi(makeCommentRoute, makeCommentHandler)

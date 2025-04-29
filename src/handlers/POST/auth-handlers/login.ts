@@ -6,6 +6,7 @@ import type { Handler } from 'hono';
 import { loginRequest } from '../../../zod-schema/schema.js';
 import { NotFoundError, ValidationError } from '../../../utils/make-error.js';
 import { verifyPassword } from '../../../utils/verify-password.js';
+import { setCookie } from 'hono/cookie';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 const JWT_EXPIRES_IN = '7d';
@@ -29,5 +30,12 @@ export const loginHandler: Handler = async (c) => {
     const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
     const { passwordHash, ...userData } = user;
 
-    return c.json({ message: 'Login successful', user: userData, token });
-};
+    setCookie(c, "jwt", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24 * 1,
+    })
+
+    return c.json({ message: 'Login successful', user: userData }, 200);
+}

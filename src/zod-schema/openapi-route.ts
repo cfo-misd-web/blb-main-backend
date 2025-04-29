@@ -227,3 +227,27 @@ export const makeLikeRoute = createRoute({
         }
     }
 });
+
+export const logoutRoute = createRoute({
+    method: 'post',
+    path: '/auth/logout',
+    summary: 'Log out a user',
+    description: 'Logs out a user by invalidating the JWT token.',
+    tags: ['auth'],
+    request: {
+        body: {
+            content: {
+                'application/json': {
+                    schema: z.object({})
+                }
+            }
+        }
+    },
+    responses: {
+        200: {
+            description: 'Logout successful',
+        }
+
+    }
+});
+

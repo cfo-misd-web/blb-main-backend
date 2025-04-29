@@ -29,7 +29,6 @@ export const loginResponse = z.object({
         createdAt: z.number(),
         updatedAt: z.number(),
     }),
-    token: z.string()
 })
 
 
@@ -42,6 +41,8 @@ export const registerSchema = z.object({
 export const fileUploadSchema = z.object({
     file: z.instanceof(File).refine((file) => file.size <= 5 * 1024 * 1024, {
         message: 'File size exceeds 5MB',
+    }).refine((file) => ['image/jpeg', 'image/png', 'image/gif'].includes(file.type), {
+        message: 'Invalid file type. Only JPEG, PNG, and GIF are allowed.',
     }),
 });
 
