@@ -1,6 +1,6 @@
 import { createRoute } from '@hono/zod-openapi';
 import { z } from 'zod';
-import { fileUploadSchema, getCommentsByPostIdParams, getPostParamsSchema, getPostResponse, getPostsPaginatedQuerySchema, getPostsPaginatedResponse, loginRequest, loginResponse, makeCommentResponse, makeCommentSchema, makePostResponse, makePostSchema, registerSchema, makeLikeParams, makeLikeResponse } from './schema.js';
+import { fileUploadSchema, getCommentsByPostIdParams, getPostParamsSchema, getPostResponse, getPostsPaginatedQuerySchema, getPostsPaginatedResponse, loginRequest, loginResponse, makeCommentResponse, makeCommentSchema, makePostResponse, makePostSchema, registerSchema, makeLikeParams, makeLikeResponse, makeRatingResponse, makeRatingSchema, getPostRatingResponse, getPostRatingParams } from './schema.js';
 
 export const loginroute = createRoute({
     summary: 'Log in a user',
@@ -249,5 +249,54 @@ export const logoutRoute = createRoute({
         }
 
     }
+});
+
+
+export const ratingRoute = createRoute({
+    method: 'post',
+    path: '/rate',
+    summary: 'Rate a post',
+    description: 'Allows a user to rate a post.',
+    tags: ['ratings'],
+    request: {
+        body: {
+            content: {
+                'application/json': {
+                    schema: makeRatingSchema
+                }
+            }
+        }
+    },
+    responses: {
+        200: {
+            description: 'Rating processed',
+            content: {
+                'application/json': {
+                    schema: makeRatingResponse
+                }
+            }
+        }
+    }
+});
+
+export const getPostRatingRoute = createRoute({
+    method: 'get',
+    path: '/posts/{postId}/rating',
+    summary: 'Get post rating',
+    description: 'Fetches the average rating and total number of ratings for a specific post.',
+    tags: ['ratings'],
+    request: {
+        params: getPostRatingParams
+    },
+    responses: {
+        200: {
+            description: 'Post rating fetched successfully',
+            content: {
+                'application/json': {
+                    schema: getPostRatingResponse
+                },
+            },
+        },
+    },
 });
 

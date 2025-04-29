@@ -11,7 +11,7 @@ export const makeCommentHandler: Handler = async (c: Context) => {
     if (!parseResult.success) {
         throw new ValidationError(`Invalid input: ${JSON.stringify(parseResult.error.errors)}`);
     }
-    const { content, fname, lname, email, cId, postId } = parseResult.data;
+    const { content, fname, lname, email, userId, postId } = parseResult.data;
     const id = uuidv4();
     const inserted = await db.insert(comments).values({
         content,
@@ -19,7 +19,7 @@ export const makeCommentHandler: Handler = async (c: Context) => {
         lname: lname || null,
         id,
         email,
-        cId,
+        userId,
         postId,
     }).returning();
     if (!inserted || inserted.length === 0) {

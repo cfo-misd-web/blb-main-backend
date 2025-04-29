@@ -28,7 +28,7 @@ export const comments = sqliteTable('comments', {
     fname: text('fname'),
     lname: text('lname'),
     email: text('email').notNull(),
-    cId: text('c_id').notNull(),
+    userId: text('user_id').notNull(),
     postId: text('post_id').references(() => posts.id).notNull(),
     createdAt: integer('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
     updatedAt: integer('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
@@ -39,6 +39,15 @@ export const media = sqliteTable('media', {
     id: text('id').primaryKey(),
     path: text('path').notNull().unique(),
     url: text('url').notNull(),
+    createdAt: integer('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: integer('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const ratings = sqliteTable('ratings', {
+    id: text('id').primaryKey(),
+    postId: text('post_id').references(() => posts.id).notNull(),
+    userId: text('user_id').notNull(),
+    rating: integer('rating').notNull(),
     createdAt: integer('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
     updatedAt: integer('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
 });

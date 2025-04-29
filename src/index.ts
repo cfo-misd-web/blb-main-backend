@@ -9,7 +9,7 @@ import { authMiddleware } from './middleware/auth-middleware.js'
 import { errorHandlerMiddleware } from './middleware/error-middleware.js'
 import { Scalar } from '@scalar/hono-api-reference'
 import { logger } from 'hono/logger'
-import { getCommentsByPostIdRoute, getPostRoute, loginroute, makeCommentRoute, makePostRoute, registerRoute, uploadmediaRoute, getPostsPaginatedRoute, makeLikeRoute, logoutRoute } from './zod-schema/openapi-route.js'
+import { getCommentsByPostIdRoute, getPostRoute, loginroute, makeCommentRoute, makePostRoute, registerRoute, uploadmediaRoute, getPostsPaginatedRoute, makeLikeRoute, logoutRoute, ratingRoute, getPostRatingRoute } from './zod-schema/openapi-route.js'
 import { makePostHandler } from './handlers/POST/post-handlers/make-post.js'
 import { getPostHandler } from './handlers/GET/post-handlers/get-post-handler.js'
 import { getCommentsByPostIdHandler } from './handlers/GET/comments-handler/get-comments-by-id.js'
@@ -20,6 +20,8 @@ import { cors } from 'hono/cors'
 import { getPostsPaginatedHandler } from './handlers/GET/post-handlers/get-posts-paginated.js'
 import { makeLikeHandler } from './handlers/POST/post-handlers/make-like.js';
 import { logoutHandler } from './handlers/POST/auth-handlers/logout.js'
+import { makeRatingHandler } from './handlers/POST/ratings-handler.ts/make-rating.js'
+import { getPostRatingHandler } from './handlers/GET/rating-handler/get-post-rating.js'
 
 const app = new OpenAPIHono()
 
@@ -51,6 +53,7 @@ app.get('/', frontPageHandler)
 app.onError(errorHandlerMiddleware)
 
 // public routes
+app.get('/health', healthHandler)
 
 app.openapi(registerRoute, registerHandler)
 app.openapi(loginroute, loginHandler)
@@ -58,6 +61,9 @@ app.openapi(logoutRoute, logoutHandler)
 app.openapi(getCommentsByPostIdRoute, getCommentsByPostIdHandler)
 app.openapi(getPostRoute, getPostHandler)
 app.openapi(makeCommentRoute, makeCommentHandler)
+app.openapi(ratingRoute, makeRatingHandler)
+app.openapi(getPostRatingRoute, getPostRatingHandler)
+app.openapi(makeLikeRoute, makeLikeHandler)
 
 app.get('/media/:filename', serveMediaHandler)
 
@@ -68,9 +74,9 @@ app.use('/protected/*', authMiddleware)
 app.openapi(uploadmediaRoute, uploadHandler)
 app.openapi(makePostRoute, makePostHandler)
 app.openapi(getPostsPaginatedRoute, getPostsPaginatedHandler)
-app.openapi(makeLikeRoute, makeLikeHandler)
 
-app.get('/health', healthHandler)
+
+
 
 serve({
   fetch: app.fetch,

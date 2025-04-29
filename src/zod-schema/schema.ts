@@ -90,7 +90,7 @@ export const makeCommentSchema = z.object({
     fname: z.string().optional(),
     lname: z.string().optional(),
     email: z.string().email(),
-    cId: z.string().min(1),
+    userId: z.string().min(1),
     postId: z.string().nonempty()
 });
 
@@ -155,4 +155,30 @@ export const makeLikeResponse = z.object({
     likes: z.number(),
 });
 
+export const makeRatingSchema = z.object({
+    postId: z.string().nonempty(),
+    userId: z.string().nonempty(),
+    rating: z.number().int().min(1).max(5),
+});
 
+export const makeRatingResponse = z.object({
+    message: z.string(),
+    rating: z.object({
+        id: z.string(),
+        postId: z.string(),
+        userId: z.string(),
+        rating: z.number(),
+        createdAt: z.number(),
+        updatedAt: z.number(),
+    }),
+});
+
+export const getPostRatingParams = z.object({
+    postId: z.string().nonempty(),
+})
+
+export const getPostRatingResponse = z.object({
+    message: z.string(),
+    averageRating: z.number().nullable(),
+    totalRatings: z.number(),
+})
