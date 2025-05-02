@@ -26,13 +26,17 @@ import { getPostRatingHandler } from './handlers/GET/rating-handler/get-post-rat
 const app = new OpenAPIHono()
 
 app.use(logger())
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:2000',
+  credentials: true,
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+}))
 
-app.openAPIRegistry.registerComponent('securitySchemes', 'Bearer', {
-  type: 'http',
-  scheme: 'bearer',
-  bearerFormat: 'JWT',
-})
+// app.openAPIRegistry.registerComponent('securitySchemes', 'Bearer', {
+//   type: 'http',
+//   scheme: 'bearer',
+//   bearerFormat: 'JWT',
+// })
 
 app.doc('/openapi.json', {
   openapi: '3.0.0',

@@ -32,8 +32,8 @@ export const loginHandler: Handler = async (c) => {
 
     setCookie(c, "jwt", token, {
         httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production' ? true : false,
+        sameSite: process.env.NODE_ENV === "production" ? 'strict' : "lax",
         maxAge: 60 * 60 * 24 * 1,
     })
 
