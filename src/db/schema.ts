@@ -1,4 +1,4 @@
-import { sql } from 'drizzle-orm';
+import { desc, sql } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 
@@ -18,8 +18,11 @@ export const posts = sqliteTable('posts', {
     bannerImg: text('banner_img'),
     content: text('content').notNull(),
     likes: integer('likes').notNull().default(0),
-    createdAt: integer('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+    createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
     updatedAt: integer('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
+    tags: text('tags').notNull().default('[]'),
+    description: text('description').notNull().default(''),
+    route: text('route').notNull().default(''),
 });
 
 export const comments = sqliteTable('comments', {

@@ -13,14 +13,19 @@ export const makePostHandler: Handler = async (c: Context) => {
     if (!parseResult.success) {
         throw new ValidationError(`Invalid input: ${JSON.stringify(parseResult.error.errors)}`);
     }
-    const { title, bannerImg, content, author } = parseResult.data;
+    const { title, bannerImg, content, author, publishedDate, tags, description, route } = parseResult.data;
     const id = uuidv4();
+
     const inserted = await db.insert(posts).values({
         id,
         title,
         author,
         bannerImg: bannerImg ?? null,
         content,
+        route,
+        tags: tags ? JSON.stringify(tags) : '[]',
+        description,
+        createdAt: publishedDate ? new Date(publishedDate).toISOString().slice(0, 19).replace('T', ' ') : new Date().toISOString().slice(0, 19).replace('T', ' '),
     }).returning();
     if (!inserted || inserted.length === 0) {
         throw new Error('Failed to create post');

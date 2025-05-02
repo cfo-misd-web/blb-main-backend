@@ -1,3 +1,4 @@
+import { desc } from 'drizzle-orm';
 import { z } from 'zod';
 
 export const filenameParam = z.object({
@@ -48,9 +49,13 @@ export const fileUploadSchema = z.object({
 
 export const makePostSchema = z.object({
     title: z.string().min(1),
+    route: z.string().min(1),
+    description: z.string().min(1),
+    tags: z.array(z.string().min(1)).optional(),
     author: z.string().optional(),
     bannerImg: z.string().optional(),
     content: z.string().min(1),
+    publishedDate: z.string().optional(),
 });
 
 export const makePostResponse = z.object({
