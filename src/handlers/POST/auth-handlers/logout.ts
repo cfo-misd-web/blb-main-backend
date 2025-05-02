@@ -4,8 +4,8 @@ import { setCookie } from 'hono/cookie';
 export const logoutHandler: Handler = async (c) => {
     setCookie(c, 'jwt', '', {
         httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
+        secure: false,
+        sameSite: 'lax',
         maxAge: 0,
     });
     return c.json({ message: 'Logged out successfully' });

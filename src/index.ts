@@ -26,6 +26,8 @@ import { getPostRatingHandler } from './handlers/GET/rating-handler/get-post-rat
 const app = new OpenAPIHono()
 
 app.use(logger())
+
+
 app.use(cors({
   origin: 'http://localhost:2000',
   credentials: true,

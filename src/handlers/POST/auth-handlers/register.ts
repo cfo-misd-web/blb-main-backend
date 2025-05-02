@@ -33,8 +33,8 @@ export const registerHandler: Handler = async (c: Context) => {
 
     setCookie(c, "jwt", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production' ? true : false,
-        sameSite: process.env.NODE_ENV === "production" ? 'strict' : "lax",
+        secure: false,
+        sameSite: 'lax',
         maxAge: 60 * 60 * 24 * 1, // 1 day
     });
 
