@@ -29,16 +29,15 @@ app.use(logger())
 
 
 app.use(cors({
-  origin: 'http://localhost:2000',
-  credentials: true,
+  origin: '*',
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }))
 
-// app.openAPIRegistry.registerComponent('securitySchemes', 'Bearer', {
-//   type: 'http',
-//   scheme: 'bearer',
-//   bearerFormat: 'JWT',
-// })
+app.openAPIRegistry.registerComponent('securitySchemes', 'Bearer', {
+  type: 'http',
+  scheme: 'bearer',
+  bearerFormat: 'JWT',
+})
 
 app.doc('/openapi.json', {
   openapi: '3.0.0',

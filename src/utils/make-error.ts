@@ -41,7 +41,7 @@ export class NotFoundError extends Error {
 }
 
 
-export function makeError<TError extends Error>(error: TError) {
+export function makeError<TError extends Error>(error: TError): { error: any; statusCode: 400 | 401 | 403 | 404 | 500 } {
     const defaultError = {
         name: error.name,
         message: error.message,

@@ -7,7 +7,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { registerSchema } from '../../../zod-schema/schema.js';
 import { hashPassword } from '../../../utils/hash-password.js';
 import { ValidationError } from '../../../utils/make-error.js';
-import { setCookie } from 'hono/cookie';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 const JWT_EXPIRES_IN = '7d';
@@ -31,12 +30,6 @@ export const registerHandler: Handler = async (c: Context) => {
     const user = inserted[0];
     const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
-    setCookie(c, "jwt", token, {
-        httpOnly: true,
-        secure: false,
-        sameSite: 'lax',
-        maxAge: 60 * 60 * 24 * 1, // 1 day
-    });
 
-    return c.json({ message: 'Registration successful', user }, 201);
+    return c.json({ message: 'Registration successful', user, token }, 201);
 };

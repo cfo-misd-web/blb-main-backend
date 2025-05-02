@@ -30,6 +30,7 @@ export const loginResponse = z.object({
         createdAt: z.number(),
         updatedAt: z.number(),
     }),
+    token: z.string().optional(),
 })
 
 
