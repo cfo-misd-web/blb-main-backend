@@ -305,7 +305,7 @@ export const getAllExistingRoutesRoute = createRoute({
     path: '/posts/routes',
     summary: 'Get all existing routes',
     description: 'Fetches all existing routes in the application.',
-    tags: ['routes'],
+    tags: ['posts'],
     responses: {
         200: {
             description: 'All existing routes fetched successfully',
