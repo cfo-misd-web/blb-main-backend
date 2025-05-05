@@ -300,3 +300,73 @@ export const getPostRatingRoute = createRoute({
     },
 });
 
+export const getAllExistingRoutesRoute = createRoute({
+    method: 'get',
+    path: '/posts/routes',
+    summary: 'Get all existing routes',
+    description: 'Fetches all existing routes in the application.',
+    tags: ['routes'],
+    responses: {
+        200: {
+            description: 'All existing routes fetched successfully',
+            content: {
+                'application/json': {
+                    schema: z.object({
+                        message: z.string(),
+                        routes: z.array(z.string()),
+                        totalRoutes: z.number()
+                    })
+                },
+            },
+        },
+        400: {
+            description: 'No routes found',
+            content: {
+                'application/json': {
+                    schema: z.object({
+                        message: z.string(),
+                    })
+                },
+            },
+        },
+    },
+});
+
+export const deletePostRoute = createRoute({
+    method: 'delete',
+    path: '/protected/posts/{id}',
+    summary: 'Delete a post',
+    description: 'Deletes a post by its ID. Returns the deleted post.',
+    tags: ['posts'],
+    request: {
+        params: z.object({
+            id: z.string().min(1).openapi({
+                param: { name: 'id', in: 'path', description: 'Post ID to delete' },
+                example: 'post-uuid',
+            }),
+        }),
+    },
+    responses: {
+        200: {
+            description: 'Post deleted',
+            content: {
+                'application/json': {
+                    schema: z.object({
+                        message: z.string(),
+                        post: z.any(),
+                    }),
+                },
+            },
+        },
+        404: {
+            description: 'Post not found',
+            content: {
+                'application/json': {
+                    schema: z.object({
+                        error: z.string(),
+                    }),
+                },
+            },
+        },
+    },
+});

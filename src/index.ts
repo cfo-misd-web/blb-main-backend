@@ -9,7 +9,7 @@ import { authMiddleware } from './middleware/auth-middleware.js'
 import { errorHandlerMiddleware } from './middleware/error-middleware.js'
 import { Scalar } from '@scalar/hono-api-reference'
 import { logger } from 'hono/logger'
-import { getCommentsByPostIdRoute, getPostRoute, loginroute, makeCommentRoute, makePostRoute, registerRoute, uploadmediaRoute, getPostsPaginatedRoute, makeLikeRoute, logoutRoute, ratingRoute, getPostRatingRoute } from './zod-schema/openapi-route.js'
+import { getCommentsByPostIdRoute, getPostRoute, loginroute, makeCommentRoute, makePostRoute, registerRoute, uploadmediaRoute, getPostsPaginatedRoute, makeLikeRoute, logoutRoute, ratingRoute, getPostRatingRoute, getAllExistingRoutesRoute, deletePostRoute } from './zod-schema/openapi-route.js'
 import { makePostHandler } from './handlers/POST/post-handlers/make-post.js'
 import { getPostHandler } from './handlers/GET/post-handlers/get-post-handler.js'
 import { getCommentsByPostIdHandler } from './handlers/GET/comments-handler/get-comments-by-id.js'
@@ -22,6 +22,8 @@ import { makeLikeHandler } from './handlers/POST/post-handlers/make-like.js';
 import { logoutHandler } from './handlers/POST/auth-handlers/logout.js'
 import { makeRatingHandler } from './handlers/POST/ratings-handler.ts/make-rating.js'
 import { getPostRatingHandler } from './handlers/GET/rating-handler/get-post-rating.js'
+import { getAllExistingRoutesHandler } from './handlers/GET/post-handlers/get-all-existing-routes.js'
+import { deletePostHandler } from './handlers/POST/post-handlers/delete-post.js'
 
 const app = new OpenAPIHono()
 
@@ -52,10 +54,13 @@ app.get('/reference', Scalar({ pageTitle: 'balinkbayan API reference', url: '/op
 app.get('/', frontPageHandler)
 
 
+// List all available routes
 
 // error handling middleware
 
 app.onError(errorHandlerMiddleware)
+
+app.openapi(getAllExistingRoutesRoute, getAllExistingRoutesHandler)
 
 // public routes
 app.get('/health', healthHandler)
@@ -72,12 +77,15 @@ app.openapi(makeLikeRoute, makeLikeHandler)
 
 app.get('/media/:filename', serveMediaHandler)
 
+
+
 // protected routes
 
 app.use('/protected/*', authMiddleware)
 
 app.openapi(uploadmediaRoute, uploadHandler)
 app.openapi(makePostRoute, makePostHandler)
+app.openapi(deletePostRoute, deletePostHandler)
 app.openapi(getPostsPaginatedRoute, getPostsPaginatedHandler)
 
 
