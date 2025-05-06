@@ -188,3 +188,10 @@ export const getPostRatingResponse = z.object({
     averageRating: z.number().nullable(),
     totalRatings: z.number(),
 })
+
+export const emailSchema = z.object({
+    to: z.string().email(),
+    name: z.string().nonempty(),
+    subject: z.string().nonempty(),
+    text: z.string().optional(),
+});

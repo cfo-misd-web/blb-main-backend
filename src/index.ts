@@ -24,6 +24,8 @@ import { makeRatingHandler } from './handlers/POST/ratings-handler.ts/make-ratin
 import { getPostRatingHandler } from './handlers/GET/rating-handler/get-post-rating.js'
 import { getAllExistingRoutesHandler } from './handlers/GET/post-handlers/get-all-existing-routes.js'
 import { deletePostHandler } from './handlers/POST/post-handlers/delete-post.js'
+import { sendEmailHandler } from './handlers/POST/contact-handler/mail-handler.js';
+import { sendEmailRoute } from './zod-schema/openapi-route.js';
 
 const app = new OpenAPIHono()
 
@@ -87,13 +89,14 @@ app.openapi(uploadmediaRoute, uploadHandler)
 app.openapi(makePostRoute, makePostHandler)
 app.openapi(deletePostRoute, deletePostHandler)
 app.openapi(getPostsPaginatedRoute, getPostsPaginatedHandler)
+app.openapi(sendEmailRoute, sendEmailHandler)
 
 
 
 
 serve({
   fetch: app.fetch,
-  port: 3000
+  port: 2233
 }, (info) => {
   console.log(`Server is running on http://localhost:${info.port}`)
 })

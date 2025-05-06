@@ -1,6 +1,6 @@
 import { createRoute } from '@hono/zod-openapi';
 import { z } from 'zod';
-import { fileUploadSchema, getCommentsByPostIdParams, getPostParamsSchema, getPostResponse, getPostsPaginatedQuerySchema, getPostsPaginatedResponse, loginRequest, loginResponse, makeCommentResponse, makeCommentSchema, makePostResponse, makePostSchema, registerSchema, makeLikeParams, makeLikeResponse, makeRatingResponse, makeRatingSchema, getPostRatingResponse, getPostRatingParams } from './schema.js';
+import { fileUploadSchema, getCommentsByPostIdParams, getPostParamsSchema, getPostResponse, getPostsPaginatedQuerySchema, getPostsPaginatedResponse, loginRequest, loginResponse, makeCommentResponse, makeCommentSchema, makePostResponse, makePostSchema, registerSchema, makeLikeParams, makeLikeResponse, makeRatingResponse, makeRatingSchema, getPostRatingResponse, getPostRatingParams, emailSchema } from './schema.js';
 
 export const loginroute = createRoute({
     summary: 'Log in a user',
@@ -364,6 +364,57 @@ export const deletePostRoute = createRoute({
                 'application/json': {
                     schema: z.object({
                         error: z.string(),
+                    }),
+                },
+            },
+        },
+    },
+});
+
+export const sendEmailRoute = createRoute({
+    method: 'post',
+    path: '/protected/contact/send-email',
+    summary: 'Send an email',
+    description: 'Sends an email using Google SMTP. The message body is optional.',
+    tags: ['contact'],
+    request: {
+        body: {
+            content: {
+                'application/json': {
+                    schema: emailSchema
+                },
+            },
+        },
+    },
+    responses: {
+        200: {
+            description: 'Email sent successfully',
+            content: {
+                'application/json': {
+                    schema: z.object({
+                        message: z.string(),
+                    }),
+                },
+            },
+        },
+        400: {
+            description: 'Invalid input',
+            content: {
+                'application/json': {
+                    schema: z.object({
+                        message: z.string(),
+                        errors: z.any(),
+                    }),
+                },
+            },
+        },
+        500: {
+            description: 'Failed to send email',
+            content: {
+                'application/json': {
+                    schema: z.object({
+                        message: z.string(),
+                        error: z.string().optional(),
                     }),
                 },
             },
