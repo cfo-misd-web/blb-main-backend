@@ -58,6 +58,17 @@ export const makePostSchema = z.object({
     publishedDate: z.string().optional(),
 });
 
+export const editPostSchema = z.object({
+    title: z.string().min(1),
+    route: z.string().min(1),
+    description: z.string().min(1),
+    tags: z.array(z.string().min(1)).optional(),
+    author: z.string().optional(),
+    bannerImg: z.string().optional(),
+    content: z.string().min(1),
+    publishedDate: z.string().optional(),
+});
+
 export const makePostResponse = z.object({
     message: z.string(),
     post: z.object({

@@ -447,3 +447,56 @@ export const sendEmailRoute = createRoute({
         },
     },
 });
+
+export const editPostRoute = createRoute({
+    method: 'put',
+    path: '/protected/posts/{routeID}/edit',
+    summary: 'Edit a post by route',
+    description: 'Edits an existing post identified by its unique route.',
+    tags: ['posts'],
+    request: {
+        params: z.object({
+            routeID: z.string().min(1).openapi({
+                param: { name: 'routeID', in: 'path', description: 'Post route to edit' },
+                example: 'some-news-article',
+            }),
+        }),
+        body: {
+            content: {
+                'application/json': {
+                    schema: z.object({
+                        title: z.string().min(1),
+                        route: z.string().min(1),
+                        description: z.string().min(1),
+                        tags: z.array(z.string().min(1)).optional(),
+                        author: z.string().optional(),
+                        bannerImg: z.string().optional(),
+                        content: z.string().min(1),
+                        publishedDate: z.string().optional(),
+                    }),
+                },
+            },
+        },
+    },
+    responses: {
+        200: {
+            description: 'Post updated successfully',
+            content: {
+                'application/json': {
+                    schema: z.object({
+                        message: z.string(),
+                        post: z.object({
+                            id: z.string(),
+                            title: z.string(),
+                            bannerImg: z.string().nullable(),
+                            content: z.string(),
+                            userId: z.string(),
+                            createdAt: z.number(),
+                            updatedAt: z.number(),
+                        }),
+                    }),
+                },
+            },
+        },
+    },
+});
