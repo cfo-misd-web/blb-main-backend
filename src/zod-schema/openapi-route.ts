@@ -136,6 +136,32 @@ export const getPostRoute = createRoute({
     }
 });
 
+export const getPostbyrouteRoute = createRoute({
+    method: 'get',
+    path: '/posts/specific/{route}',
+    summary: 'Get a post by route',
+    description: 'Retrieves a single post by its unique ID.',
+    tags: ['posts'],
+    request: {
+        params: z.object({
+            route: z.string().min(1).openapi({
+                param: { name: 'route', in: 'path', description: 'Post route to get' },
+                example: 'some-news-article',
+            })
+        }),
+    },
+    responses: {
+        200: {
+            description: 'Post found',
+            content: {
+                'application/json': {
+                    schema: getPostResponse
+                }
+            }
+        },
+    }
+});
+
 export const getPostsPaginatedRoute = createRoute({
     method: 'get',
     path: '/posts',

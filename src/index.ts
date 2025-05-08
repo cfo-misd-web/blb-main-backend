@@ -9,7 +9,7 @@ import { authMiddleware } from './middleware/auth-middleware.js'
 import { errorHandlerMiddleware } from './middleware/error-middleware.js'
 import { Scalar } from '@scalar/hono-api-reference'
 import { logger } from 'hono/logger'
-import { getCommentsByPostIdRoute, getPostRoute, loginroute, makeCommentRoute, makePostRoute, registerRoute, uploadmediaRoute, getPostsPaginatedRoute, makeLikeRoute, logoutRoute, ratingRoute, getPostRatingRoute, getAllExistingRoutesRoute, deletePostRoute } from './zod-schema/openapi-route.js'
+import { getCommentsByPostIdRoute, getPostRoute, loginroute, makeCommentRoute, makePostRoute, registerRoute, uploadmediaRoute, getPostsPaginatedRoute, makeLikeRoute, logoutRoute, ratingRoute, getPostRatingRoute, getAllExistingRoutesRoute, deletePostRoute, getPostbyrouteRoute } from './zod-schema/openapi-route.js'
 import { makePostHandler } from './handlers/POST/post-handlers/make-post.js'
 import { getPostHandler } from './handlers/GET/post-handlers/get-post-handler.js'
 import { getCommentsByPostIdHandler } from './handlers/GET/comments-handler/get-comments-by-id.js'
@@ -26,6 +26,7 @@ import { getAllExistingRoutesHandler } from './handlers/GET/post-handlers/get-al
 import { deletePostHandler } from './handlers/POST/post-handlers/delete-post.js'
 import { sendEmailHandler } from './handlers/POST/contact-handler/mail-handler.js';
 import { sendEmailRoute } from './zod-schema/openapi-route.js';
+import { getPostbyRouteHandler } from './handlers/GET/post-handlers/get-post-by-route.js'
 
 const app = new OpenAPIHono()
 
@@ -33,7 +34,7 @@ app.use(logger())
 
 
 app.use(cors({
-  origin: '*',
+  origin: process.env.NODE_ENV === 'production' ? ['https://beta.balinkbayan.gov.ph', 'https://balinkbayan.gov.ph'] : 'http://localhost:2000',
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }))
 
@@ -43,7 +44,7 @@ app.openAPIRegistry.registerComponent('securitySchemes', 'Bearer', {
   bearerFormat: 'JWT',
 })
 
-app.doc('/openapi.json', {
+app.doc('/yuagdkdbgajhvhavfhj.json', {
   openapi: '3.0.0',
   info: {
     title: "balinkbayan API",
@@ -51,7 +52,7 @@ app.doc('/openapi.json', {
   },
 })
 
-app.get('/reference', Scalar({ pageTitle: 'balinkbayan API reference', url: '/openapi.json' }))
+app.get('/kggggdkpCFOwebmisd32jsahdjkashdkajd', Scalar({ pageTitle: 'balinkbayan API reference', url: '/yuagdkdbgajhvhavfhj.json' }))
 
 app.get('/', frontPageHandler)
 
@@ -72,6 +73,7 @@ app.openapi(loginroute, loginHandler)
 app.openapi(logoutRoute, logoutHandler)
 app.openapi(getCommentsByPostIdRoute, getCommentsByPostIdHandler)
 app.openapi(getPostRoute, getPostHandler)
+app.openapi(getPostbyrouteRoute, getPostbyRouteHandler)
 app.openapi(makeCommentRoute, makeCommentHandler)
 app.openapi(ratingRoute, makeRatingHandler)
 app.openapi(getPostRatingRoute, getPostRatingHandler)

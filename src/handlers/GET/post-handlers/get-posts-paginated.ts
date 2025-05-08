@@ -2,7 +2,7 @@ import { db } from '../../../db/connection.js';
 import { posts } from '../../../db/schema.js';
 import type { Context, Handler } from 'hono';
 import { getPostsPaginatedQuerySchema } from '../../../zod-schema/schema.js';
-import { like, or } from 'drizzle-orm';
+import { desc, like, or } from 'drizzle-orm';
 
 export const getPostsPaginatedHandler: Handler = async (c: Context) => {
     const { page, pageSize, search } = { ...getPostsPaginatedQuerySchema.parse(c.req.query()), ...c.req.query() };
@@ -16,13 +16,16 @@ export const getPostsPaginatedHandler: Handler = async (c: Context) => {
         const searchStr = `%${search.trim()}%`;
         postsResult = await db.select().from(posts)
             .where(or(like(posts.title, searchStr), like(posts.content, searchStr)))
+            .orderBy(desc(posts.createdAt)) // Sort by date in descending order
             .limit(sizeNum).offset(offset);
 
         const countResult = await db.select({ count: posts.id }).from(posts)
             .where(or(like(posts.title, searchStr), like(posts.content, searchStr)));
         totalResult = countResult.length;
     } else {
-        postsResult = await db.select().from(posts).limit(sizeNum).offset(offset);
+        postsResult = await db.select().from(posts)
+            .orderBy(desc(posts.createdAt)) // Sort by date in descending order
+            .limit(sizeNum).offset(offset);
         const countResult = await db.select({ count: posts.id }).from(posts);
         totalResult = countResult.length;
     }

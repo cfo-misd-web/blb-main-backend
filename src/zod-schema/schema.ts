@@ -1,4 +1,3 @@
-import { desc } from 'drizzle-orm';
 import { z } from 'zod';
 
 export const filenameParam = z.object({
@@ -75,6 +74,7 @@ export const makePostResponse = z.object({
 export const getPostParamsSchema = z.object({
     id: z.string().min(1),
 });
+
 export const getPostResponse = z.object({
     post: z.object({
         id: z.string(),

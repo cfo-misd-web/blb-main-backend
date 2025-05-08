@@ -1,9 +1,6 @@
 import nodemailer from 'nodemailer';
 import type { Context, Handler } from 'hono';
-import { z } from 'zod';
 import { emailSchema } from '../../../zod-schema/schema.js';
-
-
 
 export const sendEmailHandler: Handler = async (c: Context) => {
     const body = await c.req.json();
