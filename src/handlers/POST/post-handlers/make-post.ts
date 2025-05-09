@@ -24,7 +24,7 @@ export const makePostHandler: Handler = async (c: Context) => {
         content,
         route,
         tags: tags ? JSON.stringify(tags) : '[]',
-        description,
+        description: description ?? "",
         createdAt: publishedDate ? new Date(publishedDate).toISOString().slice(0, 19).replace('T', ' ') : new Date().toISOString().slice(0, 19).replace('T', ' '),
     }).returning();
     if (!inserted || inserted.length === 0) {

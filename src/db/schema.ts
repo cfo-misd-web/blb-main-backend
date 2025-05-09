@@ -21,7 +21,7 @@ export const posts = sqliteTable('posts', {
     createdAt: text('created_at').notNull().default(sql`CURRENT_TIMESTAMP`),
     updatedAt: integer('updated_at').notNull().default(sql`CURRENT_TIMESTAMP`),
     tags: text('tags').notNull().default('[]'),
-    description: text('description').notNull().default(''),
+    description: text('description').default(''),
     route: text('route').notNull().default(''),
 });
 
